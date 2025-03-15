@@ -7,6 +7,7 @@ class Product extends Model {
   public name!: string;
   public price!: number;
   public categoryId!: number;
+  public images!: string[]; // Array to store image URLs
 }
 
 Product.init(
@@ -32,6 +33,10 @@ Product.init(
         model: "categories",
         key: "id",
       },
+    },
+    images: {
+      type: DataTypes.JSON, // Change from ARRAY to JSON
+      allowNull: true,
     },
   },
   {

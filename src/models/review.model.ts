@@ -15,6 +15,7 @@ Review.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false
     },
     productId: {
       type: DataTypes.INTEGER,
@@ -40,5 +41,6 @@ Review.init(
 );
 
 Review.belongsTo(Product, { foreignKey: "productId", as: "product" });
+Product.hasMany(Review, { foreignKey: "productId", as: "reviews" });
 
 export default Review;
