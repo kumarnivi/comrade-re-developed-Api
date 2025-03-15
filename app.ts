@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 import sequelize from "./src/config/database";
 import authRoutes from "./src/routes/auth.routes";
 import categoryRoutes from "./src/routes/category.routes";
@@ -8,9 +9,11 @@ import productRoutes from "./src/routes/product.routes";
 import reviewRoutes from "./src/routes/review.routes";
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+dotenv.config();
 
 app.use("/api/auth", authRoutes);
 app.use("/categories", categoryRoutes);

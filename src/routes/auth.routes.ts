@@ -1,11 +1,12 @@
 import express from "express";
 import { register, login, forgotPassword, resetPassword, getAllUsers, editProfile } from "../controllers/auth.controller";
 import upload from "../middlewares/multer";
+import { verifyToken } from "../middlewares/isAdmin";
 
 const router = express.Router();
 
 router.post("/register", upload.single("profileImage"), register);
-router.post("/login", login);
+router.post("/login",login);
 
 
 router.post("/forgot-password", forgotPassword);
