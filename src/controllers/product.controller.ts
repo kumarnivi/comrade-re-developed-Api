@@ -8,12 +8,17 @@ import path from "path";
 export const addProduct = async (req: any, res: any) => {
   try {
     const { name, price, categoryId } = req.body;
-    
-    // Get uploaded file paths
+
+    // Ensure images are correctly processed
     const imageUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : [];
 
-    // Create product with images
-    const product = await Product.create({ name, price, categoryId, images: imageUrls });
+    // Store image paths as JSON string
+    const product = await Product.create({ 
+      name, 
+      price, 
+      categoryId, 
+      images: JSON.stringify(imageUrls) 
+    });
 
     res.json({ message: "Product added", product });
   } catch (error) {
@@ -22,20 +27,52 @@ export const addProduct = async (req: any, res: any) => {
 };
 
 
+
+// get All Products
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.findAll({
       include: [
         { model: Category, as: "category" },
-        { model: Review, as: "reviews" }, // Include product reviews
+        { model: Review, as: "reviews" },
       ],
     });
 
-    res.json(products);
+    // Format image URLs correctly
+    const formattedProducts = products.map((product) => {
+      let images: string[] = [];
+
+      // Ensure product.images is processed correctly
+      if (typeof product.images === "string") {
+        try {
+          images = JSON.parse(product.images); // Parse JSON string
+          if (!Array.isArray(images)) {
+            images = [product.images]; // Convert single string to array
+          }
+        } catch (err) {
+          images = [product.images]; // If parsing fails, treat as single image
+        }
+      } else if (Array.isArray(product.images)) {
+        images = product.images;
+      }
+
+      // Ensure correct URLs
+      return {
+        ...product.toJSON(),
+        images: images.map((img: string) => `${req.protocol}://${req.get("host")}${img.startsWith("/") ? img : "/" + img}`),
+      };
+    });
+
+    res.status(200).json(formattedProducts);
   } catch (error) {
+    console.error("Error retrieving products:", error);
     res.status(500).json({ error: "Error retrieving products" });
   }
 };
+
+
+
+
 
 
 // Edit Product

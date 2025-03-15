@@ -7,6 +7,10 @@ import authRoutes from "./src/routes/auth.routes";
 import categoryRoutes from "./src/routes/category.routes";
 import productRoutes from "./src/routes/product.routes";
 import reviewRoutes from "./src/routes/review.routes";
+import cartRoutes from "./src/routes/cart.routes";
+import paymentRoutes from "./src/routes/payment.routes";
+import path from "path";
+
 const app = express();
 
 
@@ -15,11 +19,31 @@ app.use(express.json());
 app.use(cookieParser());
 dotenv.config();
 
+
+const allowedOrigins = [
+  "http://localhost:5000", // Allow local frontend
+  "https://your-production-site.com", // Allow production domain
+  "http://localhost:5173/"
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true, // Allows cookies/auth headers
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  })
+);
+
+// Serve the uploads folder as a static directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 app.use("/api/auth", authRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
-
+app.use("/cart", cartRoutes);
+app.use("/payment", paymentRoutes)
 // Start server & connect to DB
 sequelize.sync({ force: false }).then(() => {
   console.log("✅ Database connected & Tables created.");
