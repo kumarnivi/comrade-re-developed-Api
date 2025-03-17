@@ -4,6 +4,7 @@ import Category from "../models/category.model";
 import Review from "../models/review.model";
 import fs from "fs";
 import path from "path";
+import sequelize from "sequelize";
 
 // export const addProduct = async (req: any, res: any) => {
 //   try {
@@ -52,8 +53,7 @@ export const addProduct = async (req: any, res: any) => {
   }
 };
 
-
-
+// Get All Products
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.findAll({
@@ -96,6 +96,48 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 
+// Get ProductByCategory 
+export const getProductsByCategory = async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params; // Get category ID from request parameters
+
+    const products = await Product.findAll({
+      where: { categoryId }, // Filter by category
+      include: [
+        { model: Category, as: "category" },
+        { model: Review, as: "reviews" },
+      ],
+    });
+
+    // Format image URLs correctly
+    const formattedProducts = products.map((product) => {
+      let images: string[] = [];
+
+      if (typeof product.images === "string") {
+        try {
+          images = JSON.parse(product.images); // Parse JSON string
+          if (!Array.isArray(images)) {
+            images = [product.images]; // Convert single string to array
+          }
+        } catch (err) {
+          images = [product.images]; // If parsing fails, treat as single image
+        }
+      } else if (Array.isArray(product.images)) {
+        images = product.images;
+      }
+
+      return {
+        ...product.toJSON(),
+        images: images.map((img: string) => `${req.protocol}://${req.get("host")}${img.startsWith("/") ? img : "/" + img}`),
+      };
+    });
+
+    res.status(200).json(formattedProducts);
+  } catch (error) {
+    console.error("Error retrieving products by category:", error);
+    res.status(500).json({ error: "Error retrieving products by category" });
+  }
+};
 
 
 

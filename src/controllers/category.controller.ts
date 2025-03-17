@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import Category from "../models/category.model";
 import fs from "fs";
 import path from "path";
+import Product from "../models/product.model";
+import { Op } from "sequelize";
+import sequelize from "sequelize";
 
 // Add Category - Accepts name, description, and an image file (if available)
 export const addCategory = async (req: any, res: any) => {
@@ -18,12 +21,51 @@ export const addCategory = async (req: any, res: any) => {
 
     res.json({ message: "Category added", category });
   } catch (error) {
-    res.status(500).json({ error: "Error adding category" , err:error});
+    res.status(500).json({ error: "Error adding category" });
   }
 };
 
+
+export const getCategoriesWithProductCount = async (req: any, res: any) => {
+  try {
+    const categories = await Category.findAll({
+      attributes: [
+        "id",
+        "name",
+        "description",
+        "image",
+        [
+          sequelize.literal(
+            `(SELECT COUNT(*) FROM products WHERE products.categoryId = Category.id)`
+          ),
+          "productCount",
+        ],
+      ],
+    });
+
+    // Format the image URL properly
+    const formattedCategories = categories.map((category) => {
+      const cat = category.toJSON();
+
+      if (cat.image) {
+        const imagePath = cat.image.startsWith("/") ? cat.image : `/${cat.image}`;
+        cat.image = `${req.protocol}://${req.get("host")}${imagePath}`;
+      }
+
+      return cat;
+    });
+
+    res.json(formattedCategories);
+  } catch (error) {
+    console.error("Error retrieving categories with product count:", error);
+    res.status(500).json({ error: "Error retrieving categories" });
+  }
+};
+
+
+
 // Get All Categories
-export const getCategories = async (req: any, res: any) => {
+export const getCategories = async (req: Request, res: Response) => {
   try {
     const categories = await Category.findAll();
     const formattedCategories = categories.map((category) => {
@@ -37,7 +79,7 @@ export const getCategories = async (req: any, res: any) => {
     });
     res.json(formattedCategories);
   } catch (error) {
-    res.status(500).json({ error: "Error retrieving categories" , err:error });
+    res.status(500).json({ error: "Error retrieving categories" });
   }
 };
 
