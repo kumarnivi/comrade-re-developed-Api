@@ -1,13 +1,18 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
+import bcrypt from "bcrypt";
 
 class ComradeUser extends Model {
-    id: any;
-    role: any;
+  id: any;
+  role: any;
   profileImage: any;
-    password(password: any, password1: any) {
-        throw new Error("Method not implemented.");
-    }
+  password: any;
+  email:any
+
+  async setPassword(password: string) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(password, salt);
+  }
 }
 
 ComradeUser.init(
@@ -31,13 +36,17 @@ ComradeUser.init(
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM("admin", "customer"),
+      type: DataTypes.ENUM("superAdmin", "admin", "customer"),
       defaultValue: "customer",
+    },
+    isApproved: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false, // Only `true` if approved by an admin/superAdmin
     },
     profileImage: {
       type: DataTypes.STRING,
-      allowNull: true, // User may or may not upload an image
-      defaultValue: "https://example.com/default-profile.png", // Set a default image
+      allowNull: true,
+      defaultValue: "https://example.com/default-profile.png",
     },
   },
   {
@@ -46,15 +55,5 @@ ComradeUser.init(
     timestamps: true,
   }
 );
-
-// Sync table and log message
-sequelize
-  .sync({ force: false }) // Use `force: true` to drop & recreate table
-  .then(() => {
-    console.log("✅ Users table has been created successfully.");
-  })
-  .catch((error) => {
-    console.error("❌ Error creating Users table:", error);
-  });
 
 export default ComradeUser;

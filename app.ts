@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import sequelize from "./src/config/database";
 import authRoutes from "./src/routes/auth.routes";
+import adminRoutes from "./src/routes/adminRoutes";
 import categoryRoutes from "./src/routes/category.routes";
 import productRoutes from "./src/routes/product.routes";
 import reviewRoutes from "./src/routes/review.routes";
@@ -39,6 +40,9 @@ app.use(
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes); //Use Admin Routes
+
+
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);

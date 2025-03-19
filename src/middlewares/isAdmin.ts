@@ -72,6 +72,16 @@ export const verifyToken = (req: any, res: any, next: any) => {
 };
 
 
+// Allow `admin` and `superAdmin` to access all APIs
+export const checkAdminOrSuperAdmin = (req: any, res: any, next: any) => {
+    const allowedRoles = ["admin", "superAdmin"];
+  
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access Denied" });
+    }
+    next();
+  };
+
 export const checkRole = (roles:Array<string>) => {
     return (req:any, res:any, next:any) => {
         if(!roles.includes(req.user.role)) {

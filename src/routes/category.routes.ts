@@ -5,10 +5,10 @@ import upload from "../middlewares/multer";
 
 const router = express.Router();
 
-router.post("/add", verifyToken, checkRole(["admin"]), upload.single("image"), addCategory);
+router.post("/add", verifyToken, checkRole(["admin", "superAdmin"]), upload.single("image"), addCategory);
 router.get("/", getCategories);
-router.put("/edit/:id", verifyToken, checkRole(["admin"]), updateCategory);
-router.delete("/delete/:id", verifyToken, checkRole(["admin"]), deleteCategory);
+router.put("/edit/:id", verifyToken, checkRole(["admin", "superAdmin"]), updateCategory);
+router.delete("/delete/:id", verifyToken, checkRole(["admin", "superAdmin"]), deleteCategory);
 router.get("/categories-with-product-count", getCategoriesWithProductCount);
 
 export default router;
