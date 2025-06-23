@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import ComradeUser from "../models/user.model";
 import crypto from "crypto";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import sendEmail from "../utils/email"; // Utility function to send emails
 
 // Approve a user as an admin (Super Admin Only)

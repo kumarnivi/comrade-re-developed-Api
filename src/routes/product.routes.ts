@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/add", upload.array("images", 5), verifyToken, checkRole(["admin","superAdmin"]), addProduct);
 router.get("/", getProducts);
-router.put("/edit/:id", upload.array("images"), verifyToken, checkRole(["admin","superAdmin"]), editProduct);
+router.put("/edit/:id", upload.array("images", 5), verifyToken, checkRole(["admin","superAdmin"]), editProduct);
 router.delete("/delete/:id", verifyToken, checkRole(["admin","superAdmin"]), deleteProduct)
 
 router.get("/:categoryId", getProductsByCategory);

@@ -187,28 +187,36 @@ export const editProduct = async (req: any, res: any) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // Handle image updates if files are uploaded
     let imageUrls = product.images || [];
+
     if (req.files && req.files.length > 0) {
-      // Delete old images
+      // Delete old files
       imageUrls.forEach((imagePath: string) => {
-        const filePath = path.join(__dirname, "..", imagePath);
+        const filePath = path.resolve("public", imagePath);
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
       });
-      // Map new images
-      imageUrls = req.files.map((file: any) => `/uploads/${file.filename}`);
+
+      // Add new images
+      imageUrls = (req.files as Express.Multer.File[]).map((file) => `/uploads/${file.filename}`);
     }
 
-    // Update product details including stock
-    await product.update({ name, price, categoryId, stock, images: imageUrls });
+    await product.update({
+      name,
+      price,
+      categoryId,
+      stock,
+      images: imageUrls,
+    });
 
     res.json({ message: "Product updated successfully", product });
-  } catch (error) {
-    res.status(500).json({ error: "Error updating product" });
+  } catch (err) {
+    console.error("Edit product error:", err);
+    res.status(500).json({ error: "Failed to update product" });
   }
 };
+
 
 
 

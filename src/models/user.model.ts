@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
-import bcrypt from "bcrypt";
+
+import bcrypt from "bcryptjs";
 
 class ComradeUser extends Model {
   id: any;
