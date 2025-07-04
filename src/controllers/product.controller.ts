@@ -187,10 +187,18 @@ export const editProduct = async (req: any, res: any) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    let imageUrls = product.images || [];
+    let imageUrls: string[] = [];
 
+    if (product.images) {
+      if (typeof product.images === "string") {
+        imageUrls = JSON.parse(product.images);
+      } else {
+        imageUrls = product.images;
+      }
+    }
+
+    // Delete old files if new ones are uploaded
     if (req.files && req.files.length > 0) {
-      // Delete old files
       imageUrls.forEach((imagePath: string) => {
         const filePath = path.resolve("public", imagePath);
         if (fs.existsSync(filePath)) {
@@ -198,8 +206,10 @@ export const editProduct = async (req: any, res: any) => {
         }
       });
 
-      // Add new images
-      imageUrls = (req.files as Express.Multer.File[]).map((file) => `/uploads/${file.filename}`);
+      // Replace with new images
+      imageUrls = (req.files as Express.Multer.File[]).map(
+        (file) => `/uploads/${file.filename}`
+      );
     }
 
     await product.update({
@@ -207,7 +217,7 @@ export const editProduct = async (req: any, res: any) => {
       price,
       categoryId,
       stock,
-      images: imageUrls,
+      images: imageUrls, // Save as array (or stringify if needed)
     });
 
     res.json({ message: "Product updated successfully", product });
@@ -216,7 +226,6 @@ export const editProduct = async (req: any, res: any) => {
     res.status(500).json({ error: "Failed to update product" });
   }
 };
-
 
 
 
