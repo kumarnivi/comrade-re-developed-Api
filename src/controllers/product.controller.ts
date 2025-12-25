@@ -6,31 +6,8 @@ import fs from "fs";
 import path from "path";
 import sequelize from "sequelize";
 
-// export const addProduct = async (req: any, res: any) => {
-//   try {
-//     const { name, price, categoryId } = req.body;
-
-//     // Ensure images are correctly processed
-//     const imageUrls = req.files ? req.files.map((file: any) => `/uploads/${file.filename}`) : [];
-
-//     // Store image paths as JSON string
-//     const product = await Product.create({ 
-//       name, 
-//       price, 
-//       categoryId, 
-//       images: JSON.stringify(imageUrls) 
-//     });
-
-//     res.json({ message: "Product added", product });
-//   } catch (error) {
-//     res.status(500).json({ error: "Error adding product" });
-//   }
-// };
-
-
 
 // get All Products
-
 
 export const addProduct = async (req: any, res: any) => {
   try {
@@ -142,40 +119,6 @@ export const getProductsByCategory = async (req: Request, res: Response) => {
 
 
 
-// Edit Product
-// export const editProduct = async (req: any, res: any) => {
-//   try {
-//     const { id } = req.params;
-//     const { name, price, categoryId } = req.body;
-
-//     const product = await Product.findByPk(id);
-//     if (!product) {
-//       return res.status(404).json({ error: "Product not found" });
-//     }
-
-//     // Handle image updates
-//     let imageUrls = product.images || [];
-//     if (req.files && req.files.length > 0) {
-//       // Delete old images
-//       imageUrls.forEach((imagePath: string) => {
-//         const filePath = path.join(__dirname, "..", imagePath);
-//         if (fs.existsSync(filePath)) {
-//           fs.unlinkSync(filePath);
-//         }
-//       });
-
-//       // Add new images
-//       imageUrls = req.files.map((file: any) => `/uploads/${file.filename}`);
-//     }
-
-//     // Update product
-//     await product.update({ name, price, categoryId, images: imageUrls });
-
-//     res.json({ message: "Product updated successfully", product });
-//   } catch (error) {
-//     res.status(500).json({ error: "Error updating product" });
-//   }
-// };
 
 export const editProduct = async (req: any, res: any) => {
   try {

@@ -75,8 +75,8 @@ export const login = async (req: any, res: any) => {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "nivethikashivakumar56@gmail.com", // Replace with your email
-    pass: "xnep zczr wocb dtxf",  // Replace with your email password
+    user: "raamnivi2529@gmail.com", // Replace with your email
+    pass: "wwjm mknp anne bmpt",  // Replace with your email password
   },
 });
 
@@ -99,7 +99,7 @@ export const forgotPassword = async (req: any, res: any) => {
 
     // Send email with OTP
     await transporter.sendMail({
-      from: "nivethikashivakumar56@gmail.com",
+      from: "raamnivi2529@gmail.com",
       to: email,
       subject: "Password Reset OTP",
       text: `Your OTP for password reset is: ${otp}. This OTP is valid for 5 minutes.`,

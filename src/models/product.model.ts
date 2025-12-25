@@ -13,12 +13,12 @@ class Product extends Model {
 
 Product.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-      allowNull: false
-    },
+   id: {
+  type: DataTypes.INTEGER.UNSIGNED,
+  autoIncrement: true,
+  primaryKey: true,
+  allowNull: false,
+},
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -27,14 +27,14 @@ Product.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    categoryId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "categories",
-        key: "id",
-      },
-    },
+   categoryId: {
+  type: DataTypes.INTEGER.UNSIGNED,
+  allowNull: false,
+  references: {
+    model: "categories",
+    key: "id",
+  },
+},
     images: {
       type: DataTypes.JSON, // Change from ARRAY to JSON
       allowNull: true,

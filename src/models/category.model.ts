@@ -10,11 +10,11 @@ class Category extends Model {
 
 Category.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+  id: {
+  type: DataTypes.INTEGER.UNSIGNED,
+  autoIncrement: true,
+  primaryKey: true,
+},
     name: {
       type: DataTypes.STRING,
       allowNull: false,

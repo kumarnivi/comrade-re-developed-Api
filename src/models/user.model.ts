@@ -19,7 +19,7 @@ class ComradeUser extends Model {
 ComradeUser.init(
   {
     id: {
-      type: DataTypes.INTEGER,
+  type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
