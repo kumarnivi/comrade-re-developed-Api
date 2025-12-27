@@ -1,7 +1,10 @@
 import Stripe from "stripe";
+import dotenv from "dotenv";
 
-const stripe = new Stripe("your_stripe_secret_key", {
-  apiVersion: '2025-02-24.acacia',
+dotenv.config();
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-02-24.acacia",
 });
 
 export default stripe;

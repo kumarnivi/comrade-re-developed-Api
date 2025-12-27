@@ -1,6 +1,7 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 import Category from "./category.model";
+import OrderItem from "./orderItem.model";
 
 class Product extends Model {
   public id!: number;
@@ -52,5 +53,9 @@ Product.init(
 );
 
 Product.belongsTo(Category, { foreignKey: "categoryId", as: "category" });
+OrderItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
 
 export default Product;

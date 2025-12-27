@@ -11,6 +11,8 @@ import reviewRoutes from "./src/routes/review.routes";
 import cartRoutes from "./src/routes/cart.routes";
 import paymentRoutes from "./src/routes/payment.routes";
 import path from "path";
+import  checkoutRoutes  from "./src/routes/checkout.routes";
+import getLatestOrder  from "./src/routes/order.routes";
 
 const app = express();
 
@@ -27,7 +29,6 @@ const allowedOrigins = [
   "http://localhost:5173/"
 ];
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -45,12 +46,21 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes); //Use Admin Routes
 
+app.use("/api/checkout", checkoutRoutes);
 
 app.use("/categories", categoryRoutes);
 app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
 app.use("/cart", cartRoutes);
-app.use("/payment", paymentRoutes)
+app.use("/", paymentRoutes)
+app.use("/", getLatestOrder)
+
+
+// JSON middleware AFTER webhook
+app.use(express.json());[]
+
+
+
 // Start server & connect to DB
 sequelize.sync({ force: false }).then(() => {
   console.log("✅ Database connected & Tables created.");

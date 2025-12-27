@@ -7,7 +7,12 @@ class Cart extends Model {
   public userId!: number;
   public productId!: number;
   public quantity!: number;
+  public product?: Product; // to access item.product
+
 }
+
+
+
 
 Cart.init(
   {
